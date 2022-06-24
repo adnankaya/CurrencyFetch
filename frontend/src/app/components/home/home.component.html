@@ -1,0 +1,107 @@
+<!-- main app container -->
+<div class="container">
+    <div class="row m-1">
+        <div class="col">
+            <div class="row mt-3 shadow-sm p-2 rounded border border-primary">
+                <div class="col-12">
+                    <div class="input-group input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="item-name">Filter by name, symbol or slug</span>
+                        </div>
+                        <input [(ngModel)]="filterObject.query" (keyup)="getCurrencies(rootUrl,filterObject)"
+                            type="search" class="form-control" id="itemName" aria-describedby="item-name">
+                    </div>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col">
+                    <div class="d-flex my-2">
+                        <button class="btn btn-sm btn-dark" [disabled]="prevURL===null"
+                            (click)="getCurrencies(prevURL, filterObject)">
+                            <span>Previous</span>
+                        </button>
+                        <button class="btn btn-sm btn-dark ml-4" [disabled]="nextURL===null"
+                            (click)="getCurrencies(nextURL, filterObject)">
+                            <span>Next</span>
+                        </button>
+                    </div>
+                    <div class="d-flex">
+                        <small class="">{{currencies.length}} / {{ totalFound}} results.</small>
+                        <small class="">Page {{currentPage}}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Symbol</th>
+                                <th scope="col">Slug</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let currency of currencies">
+                                <td>{{currency.id}}</td>
+                                <td>{{currency.symbol}}</td>
+                                <td>{{currency.slug}}</td>
+                                <td>{{currency.name}}</td>
+                                <td>${{currency.price}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <form class="my-3 shadow p-2 rounded">
+                        <div class="row mt-3">
+                            <div class="col-5">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="dc">Default Currency</span>
+                                    </div>
+                                    <input [(ngModel)]="defaultCurrency" name="defaultCurrency" type="text"
+                                        class="form-control" id="dc" aria-describedby="dc">
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="vs">Target Currency</span>
+                                    </div>
+                                    <input [(ngModel)]="targetCurrency" name="targetCurrency" type="text"
+                                        class="form-control" id="vs" aria-describedby="vs">
+                                </div>
+                            </div>
+                        </div>
+                        <button (click)="getCurrencyParity(defaultCurrency,targetCurrency)"
+                            class="btn btn-primary btn-block">Get Parity</button>
+                    </form>
+                    <div class="row mb-5 rounded p-2">
+                        <div class="col">
+                            <h5 class="text-center alert alert-primary">Parity History</h5>
+                            <div class="list-group" *ngIf="currency_prices">
+                                <div *ngFor="let cp of currency_prices"
+                                    class="list-group-item d-flex justify-content-between">
+                                    <span>
+                                        <label for="">
+                                            {{defaultCurrency}} / {{targetCurrency}} :
+                                        </label>
+                                        <b>
+                                            {{cp.price}}
+                                        </b>
+                                    </span>
+                                    <span>
+                                        <small>Created Date: </small>
+                                        <small>{{cp.created_date}}</small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
